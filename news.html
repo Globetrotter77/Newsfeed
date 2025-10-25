@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Market News</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #ddd;
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 10px;
+    }
+    h2 { color: #fff; font-size: 1.2em; margin-bottom: 10px; }
+    a { color: #66aaff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .article {
+      margin-bottom: 12px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>📰 Live Market Headlines</h2>
+  <div id="feed">Lade Nachrichten...</div>
+
+  <script>
+    async function loadNews() {
+      try {
+        const res = await fetch('https://newsdata.io/api/1/news?country=us&category=business');
+        const data = await res.json();
+        const feed = document.getElementById('feed');
+        feed.innerHTML = '';
+        data.results.slice(0, 8).forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'article';
+          div.innerHTML = `<a href="${item.link}" target="_blank">${item.title}</a><br><small>${item.source_id || ''}</small>`;
+          feed.appendChild(div);
+        });
+      } catch (e) {
+        document.getElementById('feed').innerText = 'Fehler beim Laden.';
+      }
+    }
+    loadNews();
+  </script>
+</body>
+</html>
